@@ -1,6 +1,17 @@
 <?php
-echo "Hello!!!";
+
+$url = "https://api.weather.gov/points/41.25,-77.01";
+$res = file_get_contents($url);
+$data = json_decode($res);
+
+$forecastUrl = $data->properties->forecast;
+
+var_dump(function_exists('file_get_contents'));
+
+var_dump($data);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +26,7 @@ echo "Hello!!!";
         <div class="current-info">
             <div class="date-container">
                 <div class="time" id="time">
-                    12:30 <span id="am-pm">PM</span>
+                    12:00 <span id="am-pm">PM</span>
                 </div>
                 <div class="date" id="date">
                     Monday, 24 May
@@ -41,7 +52,7 @@ echo "Hello!!!";
 
             <div class="place-container">
                 <div class="time-zone" id="time-zone">Williamsport</div>
-                <div class="country" id="country">PA 17701</div>
+                <div class="state" id="state">PA 17701</div>
             
             </div>
         </div>
