@@ -82,14 +82,14 @@ body {
     justify-content: center;
 }
 
-.future-forecast .tomorrow{
+.future-forecast .today{
     display: flex;
     align-items:flex-end;
     justify-content: space-between;
     margin: auto;
     padding: 15px;
 }
- .future-forecast .tomorrow .w-icon {
+ .future-forecast .today .w-icon {
     border-radius: 50%;
     margin-right: 20px;
  }
@@ -99,14 +99,14 @@ body {
     margin: 10px;
  } */
 
-.future-forecast .tomorrow .day {
+.future-forecast .today .day {
     padding: 5px 15px;
     background: #3c3c44;
     border-radius: 15px;
     text-align: center;
 }
 
-.future-forecast .tomorrow .temp {
+.future-forecast .today .temp {
     font-size: 20px;
     padding-top: 15px;
 }
@@ -166,7 +166,7 @@ body {
          overflow-x: scroll;
      }
 
-     .future-forecast .tomorrow {
+     .future-forecast .today {
          font-size: 16px;
      }
 

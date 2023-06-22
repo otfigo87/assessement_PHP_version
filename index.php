@@ -1,31 +1,54 @@
 <?php
 
+// Function to get data from the API
+function fetch_data($url) {
+    //adding headers to the request to avoid the HTTP request failed 403 error
+    $opts = array('http'=>array('header' => "User-Agent:MyAgent/1.0\r\n"));
+    $context = stream_context_create($opts);//required with the request
+    $json_res = file_get_contents($url, false, $context);// json format
+    //handle error
+    if (!$json_res) {
+        throw new Exception("Error retrieving data from the API");
+    }
+
+    return json_decode($json_res);//PHP array
+}
+
+// Function to create HTML cards structure
+function createCard($data)
+{
+    return '
+    <div class="weather-forecast-item">
+        <div class="day">' . $data->name . '</div>
+        <img src="' . $data->icon . '" alt="weather icon" class="w-icon">
+        <div class="temp">' . $data->temperature . '&#176; F</div>
+    </div>
+    ';
+}
+
+// End-point provided
 $api_url = "https://api.weather.gov/points/41.25,-77.01";
-//required to send some information with the request.
-//adding headers to the request to avoid the HTTP request failed 403 error
-$opts = array('http'=>array('header' => "User-Agent:MyAgent/1.0\r\n")); 
-$context = stream_context_create($opts);
-//JSON response -- First fetch
-$json_res = file_get_contents($api_url, false, $context);
-//Decodes the JSON data into PHP array
-$data = json_decode($json_res);
+
+//try-catch blocks around the API requests to handle errors/exceptions
+try {
+//First fetch
+   $data = fetch_data($api_url);
 //! variables from the provided endpoint fetch
-$forecast_url = $data->properties->forecast; //forecast URL
-$location = $data->properties->relativeLocation->properties->city;//City
-$state = $data->properties->relativeLocation->properties->state;//PA
+   $forecast_url = $data->properties->forecast; //forecast URL
+   $location = $data->properties->relativeLocation->properties->city;//City
+   $state = $data->properties->relativeLocation->properties->state;//PA
 // var_dump($forecast_url);
 
-// Second endpoint fetch
-$json_forecast = file_get_contents($forecast_url,false, $context);
-$forecast_data = json_decode($json_forecast);
+// Second fetch
+   $forecast_data = fetch_data($forecast_url);
 // var_dump($forecast_data);
 //!variable from second endpoints fetch
-$forecast = $forecast_data->properties->periods[0];//current details
-$temperature = $forecast->temperature;//current temperature
-$description = $forecast->shortForecast;//current short desc
-$humidity = $forecast->relativeHumidity->value;//current humidity
-$wind_speed = $forecast->windSpeed;//current wind speed
-$icon = $forecast->icon;//current icon
+   $forecast = $forecast_data->properties->periods[0];//current details
+   $temperature = $forecast->temperature;//current temperature
+   $description = $forecast->shortForecast;//current short desc
+   $humidity = $forecast->relativeHumidity->value;//current humidity
+   $wind_speed = $forecast->windSpeed;//current wind speed
+   $icon = $forecast->icon;//current icon
 // var_dump($temperature, $humidity, $wind_speed, $description);
 // var_dump($icon);
 
@@ -49,19 +72,13 @@ foreach ($next_days as $i => $day) {
         </div>
         ';
     } else {
-        $cards = createCard($day);
-        $weatherForecastEl .= $cards;
+        $weatherForecastEl .= createCard($day);
     }
 }
 
-function createCard($data) {
-    return '
-    <div class="weather-forecast-item">
-        <div class="day">' . $data->name . '</div>
-        <img src="' . $data->icon . '" alt="weather icon" class="w-icon">
-        <div class="temp">' . $data->temperature . '&#176; F</div>
-    </div>
-    ';
+
+} catch(Exception $error){
+    echo 'An error occurred: ' . $error->getMessage();
 }
 
 ?>
