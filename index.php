@@ -1,16 +1,74 @@
 <?php
 
-$url = "https://api.weather.gov/points/41.25,-77.01";
-$res = file_get_contents($url);
-$data = json_decode($res);
+$api_url = "https://api.weather.gov/points/41.25,-77.01";
+//required to send some information with the request.
+//adding headers to the request to avoid the HTTP request failed 403 error
+$opts = array('http'=>array('header' => "User-Agent:MyAgent/1.0\r\n")); 
+$context = stream_context_create($opts);
+//JSON response -- First fetch
+$json_res = file_get_contents($api_url, false, $context);
+//Decodes the JSON data into PHP array
+$data = json_decode($json_res);
+//! variables from the provided endpoint fetch
+$forecast_url = $data->properties->forecast; //forecast URL
+$location = $data->properties->relativeLocation->properties->city;//City
+$state = $data->properties->relativeLocation->properties->state;//PA
+// var_dump($forecast_url);
 
-$forecastUrl = $data->properties->forecast;
+// Second endpoint fetch
+$json_forecast = file_get_contents($forecast_url,false, $context);
+$forecast_data = json_decode($json_forecast);
+// var_dump($forecast_data);
+//!variable from second endpoints fetch
+$forecast = $forecast_data->properties->periods[0];//current details
+$temperature = $forecast->temperature;//current temperature
+$description = $forecast->shortForecast;//current short desc
+$humidity = $forecast->relativeHumidity->value;//current humidity
+$wind_speed = $forecast->windSpeed;//current wind speed
+$icon = $forecast->icon;//current icon
+// var_dump($temperature, $humidity, $wind_speed, $description);
+// var_dump($icon);
 
-var_dump(function_exists('file_get_contents'));
+//! 7 Days weather
+$periods = $forecast_data->properties->periods; // (Days & Nights)
+$next_days = array_slice(array_filter($periods, function($period, $index) {
+    return $index !== 0 && $index !== 1;
+}, ARRAY_FILTER_USE_BOTH), 0, 8);
+// var_dump($next_days);
 
-var_dump($data);
+$weatherForecastEl='';
+foreach ($next_days as $i => $day) {
+    $cards = '';
+    if ($i == 0) {
+        $tomorrow = '
+        <img src="' . $day->icon . '" alt="weather icon" class="w-icon">
+        <div class="other">
+            <div class="day">Tomorrow</div>
+            <div class="temp">Highest: <span id="tomorrow-temp">' . $day->temperature . '&#8457;</span></div>
+            <div class="temp" id="desc">' . $day->shortForecast . '</div>
+        </div>
+        ';
+    } else {
+        $cards = createCard($day);
+        $weatherForecastEl .= $cards;
+    }
+}
+
+function createCard($data) {
+    return '
+    <div class="weather-forecast-item">
+        <div class="day">' . $data->name . '</div>
+        <img src="' . $data->icon . '" alt="weather icon" class="w-icon">
+        <div class="temp">' . $data->temperature . '&#176; F</div>
+    </div>
+    ';
+}
 
 ?>
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,85 +84,58 @@ var_dump($data);
         <div class="current-info">
             <div class="date-container">
                 <div class="time" id="time">
-                    12:00 <span id="am-pm">PM</span>
+                     <span id="am-pm"></span>
                 </div>
-                <div class="date" id="date">
-                    Monday, 24 May
+                <div class="date" id="date">     
                 </div>
                 <div class="others" id="current-weather-items">
                     <div class="weather-item">
                         <p>Humidity</p>
-                        <p>85.98%</p>
+                        <p><?php echo $humidity; ?>%</p>
                     </div>
                     <div class="weather-item">
                         <p>Temperature</p>
-                        <p>85</p>
+                        <p><?php echo $temperature; ?></p>
                     </div>
                     <div class="weather-item">
                         <p>Wind Speed</p>
-                        <p>8</p>
+                        <p><?php echo $wind_speed; ?></p>
                     </div>
                     <div class="weather-item">
-                        <p>Description Text</p>
+                        <p id="description"><?php echo $description ?></p>
                     </div>
                 </div>
             </div>
 
             <div class="place-container">
-                <div class="time-zone" id="time-zone">Williamsport</div>
-                <div class="state" id="state">PA 17701</div>
+                <div class="time-zone" id="time-zone"><?php echo $location; ?></div>
+                <div class="state" id="state"><?php echo $state; ?> 17701</div>
             
             </div>
         </div>
     </div>
 
      <div class="future-forecast">
-            <div class="today" id="current-temp">
-                <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="today" id="">
+
+                <?php echo $tomorrow ?>
+                <!-- <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
                 <div class="other">
                     <div class="day">Monday</div>
                     <div class="temp">High - 25.8&#176; F</div>
-                </div>
+                </div> -->
                 
             </div>
 
             <div class="weather-forecast" id="weather-forecast">
-                <div class="weather-forecast-item">
+
+                <?php echo $weatherForecastEl ?>
+                <!-- <div class="weather-forecast-item">
                     <div class="day">Tue</div>
                     <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
                     <div class="temp">25.8&#176; F</div>
-
-                </div>
-                <div class="weather-forecast-item">
-                    <div class="day">Wed</div>
-                    <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-                    <div class="temp">25.8&#176; F</div>
-                   
-                </div>
-                <div class="weather-forecast-item">
-                    <div class="day">Thur</div>
-                    <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-                    <div class="temp">25.8&#176; F</div>
-                   
-                </div>
-                <div class="weather-forecast-item">
-                    <div class="day">Fri</div>
-                    <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-                    <div class="temp">25.8&#176; F</div>
                     
-                </div>
-                <div class="weather-forecast-item">
-                    <div class="day">Sat</div>
-                    <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-                    <div class="temp">25.8&#176; F</div>
-                    
-                </div>
-                <div class="weather-forecast-item">
-                    <div class="day">Sun</div>
-                    <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
-                    <div class="temp">25.8&#176; F</div>
-                    
-                </div>
+                </div> -->
             </div>
 
             

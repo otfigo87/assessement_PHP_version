@@ -1,10 +1,6 @@
 //Get Elements from the DOM
 const timeEl = document.getElementById("time"); //Time
 const dateEl = document.getElementById("date"); //Date
-const currentWeatherItemsEl = document.getElementById("current-weather-items");
-const timezone = document.getElementById("time-zone");
-const weatherForecastEl = document.getElementById("weather-forecast");
-const currentTempEl = document.getElementById("current-temp");
 const days = [
   "Sunday",
   "Monday",
@@ -39,10 +35,9 @@ setInterval(() => {
   const hour = time.getHours();
   const minutes = time.getMinutes();
   const ampm = hour >= 12 ? "PM" : "AM";
-
   const currentTime = hour + ":" + (minutes < 10 ? "0" + minutes : minutes);
   //console.log(date);
   // console.log(currentTime);
   timeEl.innerHTML = currentTime + `<span id="am-pm">${ampm}</span>`; //span to get same styles
-  dateEl.innerHTML = `${days[day]}, ${date}, ${months[month]}`;
+  dateEl.innerHTML = `${days[day]}, ${date} ${months[month]}`;
 }, 1000);

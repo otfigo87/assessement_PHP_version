@@ -38,14 +38,14 @@ body {
 .date-container .date {
     font-size: 30px;
 }
-
+/* right */
 .place-container {
     text-align: end;
 }
 
 .place-container .time-zone {
     font-size: 30px;
-    font-weight: 100;
+    font-weight: 180;
 }
 
 .place-container .state{
@@ -82,36 +82,36 @@ body {
     justify-content: center;
 }
 
-.future-forecast .today {
+.future-forecast .tomorrow{
     display: flex;
     align-items:flex-end;
     justify-content: space-between;
     margin: auto;
     padding: 15px;
 }
- .future-forecast .today .w-icon {
+ .future-forecast .tomorrow .w-icon {
     border-radius: 50%;
     margin-right: 20px;
  }
 
- .w-icon {
+ /* .w-icon {
     border-radius: 5px;
-     margin: 10px;
- }
+    margin: 10px;
+ } */
 
-.future-forecast .today .day {
+.future-forecast .tomorrow .day {
     padding: 5px 15px;
     background: #3c3c44;
     border-radius: 15px;
     text-align: center;
 }
 
-.future-forecast .today .temp {
+.future-forecast .tomorrow .temp {
     font-size: 20px;
     padding-top: 15px;
 }
 
-#desc {
+#desc{
     color: rgb(152, 217, 245);
 }
 #tomorrow-temp{
@@ -166,7 +166,7 @@ body {
          overflow-x: scroll;
      }
 
-     .future-forecast .today {
+     .future-forecast .tomorrow {
          font-size: 16px;
      }
 
@@ -203,13 +203,14 @@ body {
  }
 
  #description{
-    color: rgb(238, 75, 75);
-    margin-top: 5px;
+    color: rgb(246, 114, 114);
+    margin-top: 10px;
  }
 
  .main-icon {
     margin-top: 0;
  }
+
 /* For the video background */
  .video-bg {
   position: absolute;
