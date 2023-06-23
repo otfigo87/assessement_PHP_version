@@ -22,7 +22,7 @@ function createCard($data)
     return '
     <div class="weather-forecast-item">
         <div class="day">' . $data->name . '</div>
-        <img src="' . $data->icon . '" alt="weather icon" class="w-icon">
+        <img src="' . $data->icon . '" alt="' . $data->shortForecast .'" class="w-icon">
         <div class="temp">' . $data->temperature . '&#176; F</div>
     </div>
     ';
@@ -48,6 +48,7 @@ try {
     $forecast = $forecast_data->properties->periods[0]; //current details
     $temperature = $forecast->temperature; //current temperature
     $description = $forecast->shortForecast; //current short desc
+    $detailed_description = $forecast->detailedForecast;//desc details 
     $humidity = $forecast->relativeHumidity->value; //current humidity
     $wind_speed = $forecast->windSpeed; //current wind speed
     $icon = $forecast->icon; //current icon
@@ -67,7 +68,7 @@ try {
        
         if ($i == 0) {
             $tomorrow = '
-            <img src="' . $day->icon . '" alt="weather icon" class="w-icon">
+            <img src="' . $day->icon . '" alt="' . $description .'" class="w-icon">
             <div class="other">
               <div class="day">Tomorrow</div>
               <div class="temp">Highest: <span id="tomorrow-temp">' . $day->temperature . '&#8457;</span></div>
@@ -100,7 +101,7 @@ try {
 </head>
 
 <body>
-    <div class="container">
+    <main class="container">
         <div class="current-info">
             <div class="date-container">
                 <div class="time" id="time">
@@ -133,13 +134,14 @@ try {
 
             </div>
         </div>
-    </div>
+    </main>
 
-    <div class="future-forecast">
+    <section class="future-forecast">
         <div class="tomorrow" id="">
 
             <?php echo $tomorrow ?>
-            <!-- <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+
+            <!-- <img src="" alt="weather icon" class="w-icon">
                 <div class="other">
                     <div class="day">Monday</div>
                     <div class="temp">High - 25.8&#176; F</div>
@@ -150,16 +152,17 @@ try {
         <div class="weather-forecast" id="weather-forecast">
 
             <?php echo $weatherForecastEl ?>
+
             <!-- <div class="weather-forecast-item">
                     <div class="day">Tue</div>
-                    <img src="https://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                    <img src="" alt="weather icon" class="w-icon">
                     <div class="temp">25.8&#176; F</div>
                     
                 </div> -->
         </div>
 
 
-    </div>
+    </section>
     <video class="video-bg" autoplay muted loop>
         <source src="assets/bgvideo.mp4" type="video/mp4">
     </video>

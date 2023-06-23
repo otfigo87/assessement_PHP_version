@@ -27,7 +27,9 @@ body {
 
 .date-container .time {
     font-size: 70px;
-    font-weight: 100;
+    font-weight: 200;
+    letter-spacing: 12px;
+    text-shadow: 3px 0px 7px rgba(81,67,21,0.8), -3px 0px 7px rgba(81,67,21,0.8), 0px 4px 7px rgba(81,67,21,0.8); 
 }
 
 .date-container #am-pm {
@@ -37,15 +39,17 @@ body {
 
 .date-container .date {
     font-size: 30px;
+    text-shadow: 3px 0px 7px rgba(81,67,21,0.8), -3px 0px 7px rgba(81,67,21,0.8), 0px 4px 7px rgba(81,67,21,0.8);
 }
 /* right */
 .place-container {
     text-align: end;
+    text-shadow: 3px 0px 7px rgba(81,67,21,0.8), -3px 0px 7px rgba(81,67,21,0.8), 0px 4px 7px rgba(81,67,21,0.8); 
 }
 
 .place-container .time-zone {
-    font-size: 30px;
-    font-weight: 180;
+    font-size: 25px;
+    font-weight: 200;
 }
 
 .place-container .state{
@@ -61,6 +65,8 @@ body {
     border: 1px solid #eee;
     border-radius: 10px;
     margin: 20px 0;
+    position: relative;
+    font-size: 1.1rem;
 }
 
 .current-info .others .weather-item {
@@ -126,7 +132,7 @@ body {
     transition: all 0.5s ease-in;
 }
 #tomorrow-temp:hover{
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: rgb(233, 233, 50);
 
 }
